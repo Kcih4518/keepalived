@@ -1,0 +1,34 @@
+---
+name: Release
+'on':
+    push:
+        branches:
+            - master
+        tags:
+            - '*'
+
+defaults:
+    run:
+        working-directory: 'kcih4518.haproxy'
+
+jobs:
+    release:
+        name: Release
+        runs-on: ubuntu-latest
+        steps:
+            - name: Check out the codebase.
+              uses: actions/checkout@v2
+              with:
+                  path: 'kcih4518.haproxy'
+
+            - name: Set up Python 3.
+              uses: actions/setup-python@v2
+              with:
+                  python-version: '3.x'
+
+            - name: Install Ansible.
+              run: pip3 install ansible-core
+
+            - name: Trigger a new import on Galaxy.
+              run: >-
+                  ansible-galaxy role import --api-key ${{ secrets.GALAXY_API_KEY }} Kcih4518 keepalived
