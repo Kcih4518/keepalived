@@ -1,0 +1,20 @@
+---
+# tasks file for keepalived
+- name: Create kubernetes manifests folder
+  ansible.builtin.file:
+      path: '/etc/kubernetes/manifests'
+      state: directory
+      mode: '0755'
+
+- name: Installing iproute2
+  ansible.builtin.package:
+      name: 'iproute2'
+      state: present
+
+- name: Copy Keepalived yaml
+  check_mode: false
+  diff: true
+  ansible.builtin.template:
+      src: keepalived.yaml.j2
+      dest: /etc/kubernetes/manifests/keepalived.yaml
+      mode: '0644'
